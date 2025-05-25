@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhishingAnalyzer.Core", "PhishingAnalyzer.Core\PhishingAnalyzer.Core.csproj", "{9BE08F0A-E63E-4990-B179-7719323466F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhishingAnalyzer.ML", "PhishingAnalyzer.ML\PhishingAnalyzer.ML.csproj", "{E2962192-DA77-4C92-8473-7EF5E696D697}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhishingAnalyzer.Web", "PhishingAnalyzer.Web\PhishingAnalyzer.Web.csproj", "{7C11816C-AAB3-41AA-8010-3C80C8ED65BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9BE08F0A-E63E-4990-B179-7719323466F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BE08F0A-E63E-4990-B179-7719323466F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BE08F0A-E63E-4990-B179-7719323466F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BE08F0A-E63E-4990-B179-7719323466F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB4BC162-D11C-470E-BB95-C58E0CB5E79B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB4BC162-D11C-470E-BB95-C58E0CB5E79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB4BC162-D11C-470E-BB95-C58E0CB5E79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB4BC162-D11C-470E-BB95-C58E0CB5E79B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2962192-DA77-4C92-8473-7EF5E696D697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2962192-DA77-4C92-8473-7EF5E696D697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2962192-DA77-4C92-8473-7EF5E696D697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2962192-DA77-4C92-8473-7EF5E696D697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C11816C-AAB3-41AA-8010-3C80C8ED65BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C11816C-AAB3-41AA-8010-3C80C8ED65BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C11816C-AAB3-41AA-8010-3C80C8ED65BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C11816C-AAB3-41AA-8010-3C80C8ED65BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

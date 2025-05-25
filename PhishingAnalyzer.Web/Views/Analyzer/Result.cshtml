@@ -1,0 +1,117 @@
+@model PhishingAnalyzer.Web.Models.AnalysisResult
+@{
+    ViewData["Title"] = "Analysis Results";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Analysis Results</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>URL Analyzed</h4>
+                            <p>@Model.Url</p>
+                            
+                            <h4>Risk Assessment</h4>
+                            <div class="alert @(Model.RiskLevel == "High" || Model.RiskLevel == "Critical" ? "alert-danger" : 
+                                           Model.RiskLevel == "Medium" ? "alert-warning" : "alert-success")">
+                                <strong>Risk Level:</strong> @Model.RiskLevel<br>
+                                <strong>Risk Score:</strong> @Model.RiskScore
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.MLPrediction))
+                            {
+                                <h4>ML Model Prediction</h4>
+                                <div class="alert @(Model.MLPrediction == "Bad" ? "alert-danger" : "alert-success")">
+                                    <strong>Prediction:</strong> @Model.MLPrediction<br>
+                                    <strong>Confidence:</strong> @(Model.MLProbability.ToString("P2"))
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Analysis Details</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <strong>HTTPS:</strong> @(Model.HasHttps ? "Yes" : "No")
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>JavaScript Errors:</strong> @Model.JavaScriptErrors
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Warnings:</strong> @Model.Warnings
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Suspicious Patterns:</strong>
+                                    @if (Model.SuspiciousPatterns.Count > 0)
+                                    {
+                                        <ul class="list-unstyled mt-2">
+                                            @foreach (var pattern in Model.SuspiciousPatterns)
+                                            {
+                                                <li class="text-danger">• @pattern</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">No suspicious patterns detected</span>
+                                    }
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Analysis Date:</strong> @Model.AnalysisDate.ToString("g")
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    @if (Model.HasHttps)
+                    {
+                        <div class="mt-4">
+                            <h4>SSL Certificate Information</h4>
+                            <div class="alert @(Model.IsCertificateValid ? "alert-success" : "alert-danger")">
+                                <strong>Certificate Status:</strong> @(Model.IsCertificateValid ? "Valid" : "Invalid")<br>
+                                @if (!string.IsNullOrEmpty(Model.CertificateSubject))
+                                {
+                                    <strong>Subject:</strong> @Model.CertificateSubject<br>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.CertificateIssuer))
+                                {
+                                    <strong>Issuer:</strong> @Model.CertificateIssuer<br>
+                                }
+                                @if (Model.CertificateValidFrom.HasValue)
+                                {
+                                    <strong>Valid From:</strong> @Model.CertificateValidFrom.Value.ToString("g")<br>
+                                }
+                                @if (Model.CertificateValidTo.HasValue)
+                                {
+                                    <strong>Valid To:</strong> @Model.CertificateValidTo.Value.ToString("g")<br>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.CertificateThumbprint))
+                                {
+                                    <strong>Thumbprint:</strong> @Model.CertificateThumbprint
+                                }
+                            </div>
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.ScreenshotPath))
+                    {
+                        <div class="mt-4">
+                            <h4>Screenshot</h4>
+                            <div class="text-center">
+                                <img src="@Model.ScreenshotPath" class="img-fluid rounded" alt="Website Screenshot" style="max-width: 100%; height: auto;">
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="text-center mt-4">
+                        <a asp-action="Index" class="btn btn-primary">Analyze Another URL</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
