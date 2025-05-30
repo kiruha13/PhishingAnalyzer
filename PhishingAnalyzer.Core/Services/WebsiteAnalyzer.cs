@@ -213,8 +213,18 @@ namespace PhishingAnalyzer.Core.Services
                     // Wait for document ready state
                     wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
                     
-                    // Wait for any AJAX requests to complete
-                    wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return jQuery.active === 0").Equals(true));
+                    // Wait for any AJAX requests to complete - only if jQuery is present
+                    try {
+                        wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript(@"
+                            if (typeof jQuery !== 'undefined') {
+                                return jQuery.active === 0;
+                            }
+                            return true;
+                        ").Equals(true));
+                    } catch (Exception ex) {
+                        Console.WriteLine($"Warning: jQuery check failed: {ex.Message}");
+                        // Continue with analysis even if jQuery check fails
+                    }
                     
                     // Wait for any dynamic content to load
                     await Task.Delay(5000); // Increased delay for dynamic content
@@ -516,7 +526,7 @@ namespace PhishingAnalyzer.Core.Services
                 score += result.SuspiciousPatterns.Count * 10;
 
                 // Calculate risk level
-                result.RiskScore = Math.Min(100, score);
+                result.RiskScore = Math.Min(100, Math.Max(0, score)); // Ensure score is between 0 and 100
                 result.RiskLevel = result.RiskScore switch
                 {
                     < 30 => "Low",
@@ -530,8 +540,9 @@ namespace PhishingAnalyzer.Core.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Error calculating risk score: {ex.Message}");
+                // Set default values instead of "Unknown"
                 result.RiskScore = 0;
-                result.RiskLevel = "Unknown";
+                result.RiskLevel = "Low"; // Default to lowest risk level instead of Unknown
             }
         }
     }
