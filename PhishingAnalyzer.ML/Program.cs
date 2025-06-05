@@ -1,3 +1,4 @@
+using Microsoft.ML;
 using PhishingAnalyzer.ML.Services;
 using System;
 
@@ -9,6 +10,9 @@ namespace PhishingAnalyzer.ML
         {
             try
             {
+                // Create MLContext
+                var mlContext = new MLContext(seed: 1);
+
                 // Create trainer instance
                 var trainer = new PhishingModelTrainer();
 
@@ -17,12 +21,17 @@ namespace PhishingAnalyzer.ML
                 
                 // Train the model
                 Console.WriteLine("Starting model training...");
-                trainer.Train(trainingDataPath);
+                var (model, testData) = trainer.Train(trainingDataPath);
 
                 // Save the trained model
                 string modelPath = "phishing_model.zip";
                 trainer.SaveModel(modelPath);
                 Console.WriteLine($"Model saved to: {modelPath}");
+
+                // Evaluate the model
+                Console.WriteLine("\nEvaluating model performance...");
+                var evaluator = new ModelEvaluator(mlContext, model);
+                evaluator.EvaluateModel(testData);
 
                 // Test the model with some URLs
                 TestModel(trainer);

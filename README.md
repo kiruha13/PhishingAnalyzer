@@ -220,7 +220,7 @@ graph TD
 
 ## License
 
-MIT License
+MIT License 
 
 ## Database Setup
 

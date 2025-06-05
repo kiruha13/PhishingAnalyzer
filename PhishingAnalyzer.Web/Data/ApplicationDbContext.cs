@@ -11,8 +11,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
+    public DbSet<AnalysisHistory> AnalysisHistory { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<AnalysisHistory>()
+            .HasOne(h => h.User)
+            .WithMany()
+            .HasForeignKey(h => h.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 } 

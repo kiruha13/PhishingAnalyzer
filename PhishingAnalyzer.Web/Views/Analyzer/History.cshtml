@@ -1,0 +1,72 @@
+@model List<PhishingAnalyzer.Web.Models.AnalysisHistory>
+
+@{
+    ViewData["Title"] = "Analysis History";
+}
+
+<div class="container">
+    <h2 class="mb-4">Analysis History</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't analyzed any URLs yet. <a asp-action="Index">Start analyzing</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Date</th>
+                        <th>Risk Score</th>
+                        <th>Result</th>
+                        <th>Screenshot</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@item.Url" target="_blank" rel="noopener noreferrer">
+                                    @item.Url
+                                </a>
+                            </td>
+                            <td>@item.AnalyzedAt.ToString("g")</td>
+                            <td>
+                                <span class="badge @(item.RiskScore > 70 ? "bg-danger" : item.RiskScore > 40 ? "bg-warning" : "bg-success")">
+                                    @item.RiskScore%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(item.IsPhishing ? "bg-danger" : "bg-success")">
+                                    @(item.IsPhishing ? "Phishing" : "Safe")
+                                </span>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.ScreenshotPath))
+                                {
+                                    <a href="@item.ScreenshotPath" target="_blank" class="btn btn-sm btn-primary">
+                                        View Screenshot
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="DeleteHistory" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this analysis?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div> 

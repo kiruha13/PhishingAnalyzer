@@ -36,6 +36,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IAnalysisService, AnalysisService>();
+builder.Services.AddScoped<IAnalysisHistoryService, AnalysisHistoryService>();
 
 var app = builder.Build();
 

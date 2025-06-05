@@ -5,6 +5,7 @@ using PhishingAnalyzer.Web.Services;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace PhishingAnalyzer.Web.Controllers
 {
@@ -12,11 +13,16 @@ namespace PhishingAnalyzer.Web.Controllers
     public class AnalyzerController : Controller
     {
         private readonly IAnalysisService _analysisService;
+        private readonly IAnalysisHistoryService _historyService;
         private readonly ILogger<AnalyzerController> _logger;
 
-        public AnalyzerController(IAnalysisService analysisService, ILogger<AnalyzerController> logger)
+        public AnalyzerController(
+            IAnalysisService analysisService,
+            IAnalysisHistoryService historyService,
+            ILogger<AnalyzerController> logger)
         {
             _analysisService = analysisService;
+            _historyService = historyService;
             _logger = logger;
         }
 
@@ -51,6 +57,17 @@ namespace PhishingAnalyzer.Web.Controllers
                     return View("Error", "Analysis failed to return results");
                 }
 
+                // Save to history
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await _historyService.SaveAnalysisAsync(
+                    url,
+                    userId!,
+                    result.ScreenshotPath,
+                    result.ToString(),
+                    result.RiskScore,
+                    result.IsPhishing
+                );
+
                 return View("Result", result);
             }
             catch (Exception ex)
@@ -58,6 +75,20 @@ namespace PhishingAnalyzer.Web.Controllers
                 _logger.LogError(ex, "Error analyzing URL: {Url}", url);
                 return View("Error", $"Analysis failed: {ex.Message}");
             }
+        }
+
+        public async Task<IActionResult> History()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var history = await _historyService.GetUserHistoryAsync(userId!);
+            return View(history);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteHistory(int id)
+        {
+            await _historyService.DeleteAnalysisAsync(id);
+            return RedirectToAction(nameof(History));
         }
     }
 } 

@@ -26,5 +26,7 @@ namespace PhishingAnalyzer.Web.Models
         public DateTime? CertificateValidFrom { get; set; }
         public DateTime? CertificateValidTo { get; set; }
         public string? CertificateThumbprint { get; set; }
+
+        public bool IsPhishing => RiskScore >= 60 || MLProbability >= 0.6f;
     }
 } 

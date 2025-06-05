@@ -21,7 +21,7 @@ namespace PhishingAnalyzer.ML.Services
             _mlContext.ComponentCatalog.RegisterAssembly(typeof(UrlFeatureExtractionFactory).Assembly);
         }
 
-        public void Train(string dataPath)
+        public (ITransformer Model, IDataView TestData) Train(string dataPath)
         {
             // 1. Load raw data
             var data = _mlContext.Data.LoadFromTextFile<UrlData>(
@@ -86,19 +86,10 @@ namespace PhishingAnalyzer.ML.Services
             Console.WriteLine("Training the model...");
             _model = pipeline.Fit(split.TrainSet);
 
-            // 6. Evaluate
-            Console.WriteLine("Evaluating the model...");
-            var predictions = _model.Transform(split.TestSet);
-            var metrics = _mlContext.BinaryClassification.Evaluate(predictions, labelColumnName: "IsPhishing");
-
-            Console.WriteLine($"Accuracy: {metrics.Accuracy:P2}");
-            Console.WriteLine($"F1 Score: {metrics.F1Score:P2}");
-            Console.WriteLine($"AUC: {metrics.AreaUnderRocCurve:P2}");
-            Console.WriteLine($"Precision: {metrics.PositivePrecision:P2}");
-            Console.WriteLine($"Recall: {metrics.PositiveRecall:P2}");
-
-            // 7. Create prediction engine
+            // 6. Create prediction engine
             _predictionEngine = _mlContext.Model.CreatePredictionEngine<UrlData, UrlPrediction>(_model);
+
+            return (_model, split.TestSet);
         }
 
         public UrlPrediction Predict(string url)
