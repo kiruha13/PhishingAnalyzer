@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PhishingAnalyzer.Web.Models;
 using PhishingAnalyzer.Web.Services;
 using System;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace PhishingAnalyzer.Web.Controllers
 {
+    [Authorize]
     public class AnalyzerController : Controller
     {
         private readonly IAnalysisService _analysisService;

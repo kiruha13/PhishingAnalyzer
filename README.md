@@ -220,4 +220,21 @@ graph TD
 
 ## License
 
-MIT License 
+MIT License
+
+## Database Setup
+
+The application uses SQLite for data storage, which is a file-based database that doesn't require a separate server installation. The database file (`PhishingAnalyzer.db`) will be created automatically when you first run the application.
+
+To set up the database:
+
+1. Open the Package Manager Console in Visual Studio (Tools > NuGet Package Manager > Package Manager Console)
+2. Run the following commands:
+   ```
+   Add-Migration InitialCreate
+   Update-Database
+   ```
+
+This will create the SQLite database file with all necessary tables for user authentication and application data.
+
+Note: The database file will be created in the application's root directory. Make sure to include this file in your backups if you want to preserve user data. 
